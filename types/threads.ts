@@ -1,5 +1,5 @@
 export interface Thread {
-  id:string;
+  id: string;
   author: User;
   content: string;
   image?: string;
@@ -7,7 +7,7 @@ export interface Thread {
   repliesCount: number;
   likesCount: number;
   mention?: boolean;
-  mentionUser?: User;
+  mentionUser: User;
   createdAt: string;
 }
 
@@ -16,16 +16,16 @@ export interface Reply {
   author: User;
   content: string;
   likes: number;
-  createdAt:string
+  createdAt: string;
 }
 
 export interface User {
   id: string;
   name: string;
-  username:string;
+  username: string;
   verified: boolean;
   photo: string;
   bio: string;
   link?: string;
-  followers?: User[]
+  followers?: User[];
 }

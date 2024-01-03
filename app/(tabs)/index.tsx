@@ -1,51 +1,68 @@
-import * as React from 'react';
-import { Platform, RefreshControl, StyleSheet } from 'react-native';
-import EditScreenInfo from '../../components/EditScreenInfo';
-import { Text, View } from '../../components/Themed';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScrollView } from 'react-native-gesture-handler';
-import Lottie from "lottie-react-native"
-import { createRandomUser } from '../../utils/generate-dummy-data';
-import { ThreadsContext } from '../../context/thread-context';
-import ThreadsItem from '../../components/ThreadsItem';
+import * as React from "react";
+import {
+  Platform,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+} from "react-native";
+import Lottie from "lottie-react-native";
+import { ThreadsContext } from "../../context/thread-context";
+import ThreadItem from "../../components/ThreadsItem";
 
-// const user = createRandomUser();
-// console.log(JSON.stringify(user,null,2));
 export default function TabOneScreen() {
-  const animationRef = React.useRef<Lottie>(null)
-  const threads = React.useContext(ThreadsContext)
+  const animationRef = React.useRef<Lottie>(null);
+  const threads = React.useContext(ThreadsContext);
+
+  React.useEffect(() => {
+    animationRef.current?.play();
+  }, []);
+
   return (
-   <SafeAreaView>
-    <ScrollView
-    contentContainerStyle={{
-      paddingHorizontal:10,
-      paddingTop: Platform.select({android:30}),
-    }}
-    refreshControl={<RefreshControl refreshing={false}
-    onRefresh={()=>{
-      animationRef.current?.play();
-    }}
-    tintColor={"transparent"}/>}
-    >
-     <Lottie
-     ref={animationRef}
-     source={require("../../lottie-animations/threads.json")}
-     loop={false}
-     autoPlay
-     style={{
-      width:90,
-      height:90,
-      alignSelf:"center",
-     }}
-    //  onAnimationFinish={()=>{
-    //   alert("finished")
-    //  }}
-     /> 
-     {threads.map((thread)=>(
-      <ThreadsItem key={thread.id} {...thread}/>
-     ))}
-    </ScrollView>
-   </SafeAreaView>
+    <SafeAreaView>
+      <ScrollView
+        contentContainerStyle={{
+          paddingTop: Platform.select({ android: 30 }),
+          paddingHorizontal: 10,
+        }}
+        refreshControl={
+          <RefreshControl
+            refreshing={false}
+            tintColor={"transparent"}
+            onRefresh={() => animationRef.current?.play()}
+          />
+        }
+      >
+        <Lottie
+          ref={animationRef}
+          source={require("../../lottie-animations/threads.json")}
+          style={{
+            width: 90,
+            height: 90,
+            alignSelf: "center",
+          }}
+          loop={false}
+          onAnimationFinish={() => animationRef.current?.pause()}
+        />
+        {threads.map((thread) => (
+          <ThreadItem key={thread.id} thread={thread} />
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  separator: {
+    marginVertical: 30,
+    height: 1,
+    width: "80%",
+  },
+});
